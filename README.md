@@ -1,5 +1,7 @@
 # ReactDjango
 
+Note: Python and pip is needed.
+
 Required extensions
 1. Django
 2. ES7+ React/Redux/React-Native-snippets
