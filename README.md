@@ -1,6 +1,6 @@
 # ReactDjango
 
-Note: Python and pip is needed.
+Note: Python3 and pip are need to be installed on Windows.
 
 Required extensions
 1. Django
