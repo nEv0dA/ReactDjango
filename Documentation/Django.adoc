@@ -3,4 +3,11 @@
 
 == django
 
-* pip install *django*.
+* Type the following command lines.
+
++
+----
+pip install django djangorestframework
+----
+
+* 
