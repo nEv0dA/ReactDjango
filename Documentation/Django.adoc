@@ -8,6 +8,17 @@
 +
 ----
 pip install django djangorestframework
+cd .\music_controller
+django-admin startapp api
 ----
 
-* 
+* *models.py* file will be for the database.
+* *views.py* file will be the code that will responsible for the view.
+* Add *'api.apps.ApiConfig'* in the *music_controller > settings.py* file inside *INSTALLED_APPS*.
+* Add *'rest_framework'* in the *music_controller > settings.py* file inside *INSTALLED_APPS*.
+
+//
+
+* Add *from django.http import HttpResponse* in the *views.py* file.
+* Add *def main(request):
+    return HttpResponse("Hello")* function in the *views.py* file.
