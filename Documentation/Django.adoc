@@ -17,7 +17,7 @@ django-admin startapp api
 * Add *'api.apps.ApiConfig'* in the *music_controller > settings.py* file inside *INSTALLED_APPS*.
 * Add *'rest_framework'* in the *music_controller > settings.py* file inside *INSTALLED_APPS*.
 
-//
+{sp}+
 
 * Add *from django.http import HttpResponse* in the *views.py* file.
 * Add *def main(request):
