@@ -1,7 +1,7 @@
 
-= Installation
+= Django
 
-== django
+== Installation
 
 * Type the following command lines.
 
@@ -12,6 +12,8 @@ cd .\music_controller
 django-admin startapp api
 ----
 
+== App
+
 * *models.py* file will be for the database.
 * *views.py* file will be the code that will responsible for the view.
 * Add *'api.apps.ApiConfig'* in the *music_controller > settings.py* file inside *INSTALLED_APPS*.
@@ -19,6 +21,114 @@ django-admin startapp api
 
 {sp}+
 
-* Add *from django.http import HttpResponse* in the *views.py* file.
+* Add *from django.http import HttpResponse* in the *music_controller > api > views.py* file.
 * Add *def main(request):
-    return HttpResponse("Hello")* function in the *views.py* file.
+    return HttpResponse("Hello")* function in the *music_controller > api > views.py* file.
+
+* Create *music_controller > api > urls.py* file.
+* Add *from django.urls import path, include* line in the *music_controller > music_controller > urls.py* file.
+* Add *path('api', include ('api.urls'))* line in the *music_controller > music_controller > urls.py* file in side *urlpatterns* variable.
+* Add the following lines in the *music_controller > api > urls.py* file.
+
++
+....
+from django.urls import path
+from .views import main
+
+urlpatterns = [
+    path('', main)
+]
+....
+
+== Initialize Database
+
+* Type the following command lines in the *TERMINAL* powershell prompt.
+
++
+----
+python .\manage.py makemigrations              # db.sqlite3 will be created.
+python .\manage.py migrate
+python .\manage.py runserver
+----
+
+== Models
+
+* Insert the following lines in the *music_controller > api > models.py* file.
+
++
+....
+from django.db import models
+import string
+import random
+
+def generate_unique_code():
+    length = 6
+
+    while True:
+        code = ''.join(random.choices(string.ascii_uppercase, k=length))
+        if Room.objects.filter(code=code).count() == 0:
+            break
+    
+    return code
+
+# Create your models here.
+class Room(models.Model):
+    code = models.CharField(max_length=8, default="", unique=True)
+    host = models.CharField(max_length=50, unique=True)
+    guest_can_pause = models.BooleanField(null=False, default=False)
+    votes_to_skip = models.IntegerField(null=False, default=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+....
+
+* Type the following command lines in the *TERMINAL* powershell prompt.
+
++
+----
+python .\manage.py makemigrations              # db.sqlite3 will be created.
+python .\manage.py migrate
+python .\manage.py runserver
+----
+
+* Insert the following lines in the *music_controller > api > serializers.py* file.
+
++
+....
+from rest_framework import serializers
+from .models import Room
+
+class RoomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Room
+        fields = ('id', 'code', 'host', 'guest_can_pause',
+                  'votes_to_skip', 'created_at')
+....
+
+* Update the following lines in the *music_controller > api > views.py* file.
+
++
+....
+from django.shortcuts import render
+from rest_framework import generics
+from .serializers import RoomSerializer
+from .models import Room
+
+# Create your views here.
+
+class RoomView (generics.CreateAPIView):
+    queryset = Room.objects.all()
+    serializer_class = RoomSerializer
+....
+
+* Update the following lines in the *music_controller > api > urls.py* file.
+
++
+....
+from django.urls import path
+from .views import RoomView
+
+urlpatterns = [
+    path('room', RoomView.as_view()),
+]
+....
+
+

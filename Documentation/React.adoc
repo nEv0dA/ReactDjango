@@ -1,0 +1,188 @@
+= React
+
+== Installation
+
+* Type the following command *command lines*.
+
++
+----
+cd .\music_controller
+django-admin startapp frontend
+cd .\frontend
+----
+
+* Create *templates* folder in the *music_controller > frontend* folder.
+* Create *static* folder in the *music_controller > frontend* folder.
+* Create *css* folder in the *music_controller > frontend > static* folder.
+* Create *frontend* folder in the *music_controller > frontend > static* folder.
+* Create *images* folder in the *music_controller > frontend > static* folder.
+* Create *src* folder in the *music_controller > frontend* folder.
+* Create *components* folder in the *music_controller > frontend > src* folder.
+
+* Type the following command *command lines*.
+
++
+----
+npm init -y
+npm i webpack webpack-cli --save-dev
+npm i @babel/core babel-loader @babel/preset-env @babel/preset-react --save-dev
+npm i react react-dom --save-dev
+npm install @material-ui/core    # or npm install @mui/material
+#npm install @babel/plugin-proposal-class-properties
+npm install @babel/plugin-transform-class-properties
+npm install react-router-dom
+npm install @mui/icons-material
+----
+
+* Create the *babel.config.json* file in the *music_controller > frontend* folder.
+* Enter the following lines in the *music_controller > frontend > babel.config.json* file.
+
++
+....
+{
+    "presets": [
+        [
+            "@babel/preset-env",
+            {
+                "targets": {
+                    "node": "20"
+                }
+            }
+        ],
+        "@babel/preset-react"
+    ],
+    "plugins": ["@babel/plugin-proposal-class-properties"]
+}
+....
+
+* Create the *webpack.config.js* file in the *music_controller > frontend* folder.
+* Enter the following lines in the *music_controller > frontend > webpack.config.js* file.
+
++
+....
+const path = require("path");
+const webpack = require("webpack");
+
+module.exports = {
+  entry: "./src/index.js",
+  output: {
+    path: path.resolve(__dirname, "./static/frontend"),
+    filename: "[name].js",
+  },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+        },
+      },
+    ],
+  },
+  optimization: {
+    minimize: true,
+  },
+  plugins: [
+    new webpack.DefinePlugin({
+      "process.env": {
+        // This has effect on the react lib size
+        NODE_ENV: JSON.stringify("production"),
+      },
+    }),
+  ],
+};
+....
+
+* Create the *index.js* file in the *music_controller > frontend > src* folder.
+* Enter the following lines in the *music_controller > frontend > src > index.js* file.
+
++
+....
+import App from "./components/App";
+....
+
+const path = require("path");
+* Create the *frontend* folder in the *music_controller > frontend > templates* folder.
+* Create the *index.html* file in the *music_controller > frontend > templates > frontend* folder.
+* Enter the following lines in the *music_controller > frontend > templates > frontend > index.html* file.
+
++
+....
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Music Controller</title>
+    {% load static %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+    />
+    <link rel="stylesheet" type="text/css" href="{% static "css/index.css" %}"
+    />
+  </head>
+  <body>
+    <div id="main">
+      <div id="app"></div>
+    </div>
+
+    <script src="{% static "frontend/main.js" %}"></script>
+  </body>
+</html>
+....
+
+* Enter the following lines in the *music_controller > frontend > views.py* file.
+
++
+....
+from django.shortcuts import render
+
+# Create your views here.
+
+def index(request, *args, **kwargs):
+    return render(request, 'frontend/index.html')
+....
+
+* Create the *urls.py* file in the *music_controller > frontend* folder.
+* Enter the following lines in the *music_controller > frontend > urls.py* file.
+
++
+....
+from django.urls import path
+from .views import index
+
+urlpatterns = [
+    path('', index)
+]
+....
+
+* Append the following line in the *music_controller > music_controller > urls.py* file.
+
++
+....
+path('', include('frontend.urls'))
+....
+
+* Create the *App.js* file in the *music_controller > frontend > src > components* folder.
+* Enter the following lines in the *music_controller > frontend > src > components > App.js* file.
+
++
+....
+import React, { Component } from "react";
+import { render } from "react-dom";
+
+export default class App extends Component {
+  Contructor(props) {
+    super(props);
+  }
+
+  render () {
+    return <h1>Testing React Code</h1>;
+  }
+}
+....
+
+* Add *'frontend.apps.FrontendConfig'* in the *music_controller > settings.py* file inside *INSTALLED_APPS*.

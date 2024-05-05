@@ -1,0 +1,12 @@
+= Extention
+
+== AsciiDoc
+
+=== Configuration
+
+* Launch Visual Studio Code *Quick Open (CTRL+P)*, paste the following command line and press *Enter*.
+
++
+----
+ext install asciidoctor.asciidoctor-vscode
+----
